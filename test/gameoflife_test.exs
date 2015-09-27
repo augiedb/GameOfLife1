@@ -13,7 +13,8 @@ defmodule GameoflifeTest do
 
   test "Board prints out correctly" do
     board = Gameoflife.init
-    assert Gameoflife.get_row(board, 1) == "0000000000" 
+#    assert Gameoflife.get_row(board, 1) == "0000000000" 
+    assert Gameoflife.display_board(board) = "notgonnawork"
   end
-
+   
 end
