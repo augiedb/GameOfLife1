@@ -1,8 +1,8 @@
 defmodule Gameoflife do
 
   :random.seed(:os.timestamp)
-  @size 10
-  @times 100
+  @size 32 
+  @times 100 
   @live_start 20
 
   def init do
@@ -40,8 +40,9 @@ defmodule Gameoflife do
 
 
 
-  def play_a_game(@times) do
+  def play_a_game do
     Gameoflife.init
+    |> display_board
     |> do_play_a_game(1) # Start at 1
   end
 
@@ -49,7 +50,7 @@ defmodule Gameoflife do
     board 
     |> run_through_cells
     |> display_board 
-    # THE END
+    IO.puts "THE END"
   end
 
   def do_play_a_game(board, acc) do
@@ -83,7 +84,7 @@ defmodule Gameoflife do
   end
 
   def new_cell_value(board, {x, y}) do
-     case(HashDict.get(board, {x,y}) ) do
+     case HashDict.get(board, {x,y}) do
         "*" -> check_live_cell(board, {x, y})
         "." -> check_dead_cell(board, {x, y})
      end
@@ -99,10 +100,7 @@ defmodule Gameoflife do
 
   def check_live_cell(board, {x, y}) do
     live = live_cells_surrounding(board, {x,y})
-IO.puts "LIVE #{live}"
     case live do
-      0 -> "."
-      1 -> "."
       2 -> "*"
       3 -> "*"
       _ -> "."
@@ -131,6 +129,8 @@ IO.puts "LIVE #{live}"
   def display_board(board) do
    for x <- 1..@size, do:
        IO.puts get_row(board, x) 
+   IO.puts "----------"
+   board
   end
 
   def get_row(board, row) do
