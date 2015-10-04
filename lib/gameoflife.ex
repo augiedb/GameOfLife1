@@ -1,7 +1,7 @@
 defmodule Gameoflife do
 
   :random.seed(:os.timestamp)
-  @size 32 
+  @size 10 
   @times 100 
   @live_start 20
 
@@ -13,7 +13,7 @@ defmodule Gameoflife do
   defp create_empty_board do
     for x <- 0..(@size+1), y <- 0..(@size+1), 
         do: {{x,y}, "."}, 
-      into: HashDict.new
+      into: Map.new
   end
 
   defp add_live_cells(board) do
@@ -30,9 +30,9 @@ defmodule Gameoflife do
     :random.seed(:os.timestamp)
     x = :random.uniform(@size)    
     y = :random.uniform(@size)    
-    case HashDict.get(board, {x,y}) do
+    case Map.get(board, {x,y}) do
       "*" -> add_live_square(board, portion, acc)
-      "." -> board = HashDict.put(board, {x,y}, "*")   
+      "." -> board = Map.put(board, {x,y}, "*")   
     end
     add_live_square(board, portion, acc+1)
   end
@@ -72,19 +72,19 @@ defmodule Gameoflife do
   # Next row after this one
   def do_run_through_cells(board, x, y, new_board) when y == @size do
     new = new_cell_value(board, {x,y})
-    new_board = HashDict.put(new_board, {x, y}, new)
+    new_board = Map.put(new_board, {x, y}, new)
     do_run_through_cells(board, x+1, 1, new_board)
   end
 
   # Next!
   def do_run_through_cells(board, x, y, new_board) do
     new = new_cell_value(board, {x,y})
-    new_board = HashDict.put(new_board, {x, y}, new)
+    new_board = Map.put(new_board, {x, y}, new)
     do_run_through_cells(board, x, y+1, new_board)
   end
 
   def new_cell_value(board, {x, y}) do
-     case HashDict.get(board, {x,y}) do
+     case Map.get(board, {x,y}) do
         "*" -> check_live_cell(board, {x, y})
         "." -> check_dead_cell(board, {x, y})
      end
@@ -110,14 +110,14 @@ defmodule Gameoflife do
 
   def live_cells_surrounding(board, {x, y}) do
     live = 0
-    if ( HashDict.get(board, {x+1, y}) == "*" ), do: live = live + 1
-    if ( HashDict.get(board, {x-1, y}) == "*" ), do: live = live + 1
-    if ( HashDict.get(board, {x, y+1}) == "*" ), do: live = live + 1
-    if ( HashDict.get(board, {x, y-1}) == "*" ), do: live = live + 1
-    if ( HashDict.get(board, {x+1, y+1}) == "*" ), do: live = live + 1
-    if ( HashDict.get(board, {x+1, y-1}) == "*" ), do: live = live + 1
-    if ( HashDict.get(board, {x-1, y+1}) == "*" ), do: live = live + 1
-    if ( HashDict.get(board, {x-1, y-1}) == "*" ), do: live = live + 1
+    if ( Map.get(board, {x+1, y}) == "*" ), do: live = live + 1
+    if ( Map.get(board, {x-1, y}) == "*" ), do: live = live + 1
+    if ( Map.get(board, {x, y+1}) == "*" ), do: live = live + 1
+    if ( Map.get(board, {x, y-1}) == "*" ), do: live = live + 1
+    if ( Map.get(board, {x+1, y+1}) == "*" ), do: live = live + 1
+    if ( Map.get(board, {x+1, y-1}) == "*" ), do: live = live + 1
+    if ( Map.get(board, {x-1, y+1}) == "*" ), do: live = live + 1
+    if ( Map.get(board, {x-1, y-1}) == "*" ), do: live = live + 1
     live
   end
 
@@ -140,7 +140,7 @@ defmodule Gameoflife do
   defp do_get_row(_, _, @size + 1, show_row), do: show_row
 
   defp do_get_row(board, row, column, show_row) do
-    show_row = show_row <> HashDict.get(board, {row, column})
+    show_row = show_row <> Map.get(board, {row, column})
     do_get_row(board, row, column + 1, show_row) 
   end
 
